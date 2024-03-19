@@ -31,7 +31,7 @@ features : ['Sig_1_of_ID_2',
         'Sig_1_of_ID_3']
 
 #--------------------
-windsizes : 500
+windsizes : [500]
 batch_size : 1000000
 feature_type_list: ['temporal', 'statistical']
 load : False
