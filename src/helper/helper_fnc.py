@@ -103,7 +103,7 @@ def scale_plot_loss(args, X_test_loss, y_test_att, model_name,  domain, windsize
     plt.show()
     #--------------------------------------------------------------------------
     
-def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, dataset, domain, var_th, num_of_final_feat, min_var, further_merging, model_name):
+def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, dataset, domain, var_th, num_of_final_feat, min_var, model_name):
         
     # --------------- Calculate AUROC and Plot ROC Curve --------------------------------
     # Define the plots...
@@ -116,6 +116,9 @@ def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, datas
     for file_name in sorted(y_test_att['File'].unique()): 
             
         print(file_name)
+        
+        if 'normal' in file_name:
+            continue
 
         # Adding filter per file name...
         file_indices = y_test_att['File'] == file_name
@@ -149,7 +152,7 @@ def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, datas
         attack_short_name = file_name
         plt.plot(fpr, tpr,  label = f"{attack_short_name. capitalize()}, AUC: {round(roc_auc,3)}") #marker = '.',
         #-----------------------------------
-        eval_data.append([dataset, domain, var_th, num_of_final_feat, min_var, further_merging, model_name, file_name, round(roc_auc,3)])
+        eval_data.append([dataset, domain, var_th, num_of_final_feat, min_var, model_name, file_name, round(roc_auc,3)])
         #-----------------------------------
         
     plt.legend()
@@ -157,7 +160,7 @@ def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, datas
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.tight_layout()
-    plt.savefig(f"{args.plot_dir}/{dataset}//ROC_AUC_{dataset}_{model_name}_{domain}_{windsize}_{var_th}_{further_merging}.jpg", dpi = 500)
+    plt.savefig(f"{args.plot_dir}/{dataset}//ROC_AUC_{dataset}_{model_name}_{domain}_{windsize}_{var_th}.jpg", dpi = 500)
     plt.show()
 
     return eval_data
