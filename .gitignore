@@ -1,6 +1,7 @@
-features/*
+artifacts/*
 __pycache__/
 */__pycache__/
 */*/__pycache__/
 src/outputs/*
+src/multirun/*
 scaler/scaler*
