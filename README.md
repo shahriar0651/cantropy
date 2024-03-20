@@ -1,22 +1,22 @@
 # cantropy
 CANtropy: Time Series Feature Extraction-Based Intrusion Detection Systems for Controller Area Networks
 
-This repository provides a deep learning-based signal-level intrusion detection framework for the CAN bus. CANShield consists of three modules: 1) a data preprocessing module that handles the high-dimensional CAN data stream at the signal level and parses them into time series suitable for a deep learning model; 2) a data analyzer module consisting of multiple deep autoencoder (AE) networks, each analyzing the time-series data from a different temporal scale and granularity; and 3) finally an attack detection module that uses an ensemble method to make the final decision.
+This repository provides a deep learning-based signal-level intrusion detection framework for the CAN bus. cantropy consists of three modules: 1) a data preprocessing module that handles the high-dimensional CAN data stream at the signal level and parses them into time series suitable for a deep learning model; 2) a data analyzer module consisting of multiple deep autoencoder (AE) networks, each analyzing the time-series data from a different temporal scale and granularity; and 3) finally an attack detection module that uses an ensemble method to make the final decision.
 
-![CANShield Workflow](doc/canshield_workflow.jpg)
+![cantropy Workflow](doc/cantropy_workflow.jpg)
 
 
-## Clone CANShield
+## Clone cantropy
 
 ```
-git clone https://github.com/shahriar0651/canshield.git
-cd canshield
+git clone https://github.com/shahriar0651/cantropy.git
+cd cantropy
 ```
 
 ## Install Mambaforge
 ### Download and Install Mambaforge
 ```
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh
 chmod +x Mambaforge-$(uname)-$(uname -m).sh
 ./Mambaforge-$(uname)-$(uname -m).sh
 ```
@@ -31,7 +31,7 @@ mamba env update --file dependency/environment.yaml --prune
 
 ### Activate Environment
 ```
-mamba activate canshield
+mamba activate cantropy
 ```
 
 ## Download Dataset
@@ -64,18 +64,18 @@ datasets/
         └── README.md
 ```
 
-## Building CANShield
+## Building cantropy
 
 ### Training multiple autoencoders
 ```
-python run_development_canshield.py
+python run_development_cantropy.py
 ```
 
-## Evaluating CANShield
+## Evaluating cantropy
 
 ### Testing on the test dataset
 ```
-python run_evaluation_canshield.py
+python run_evaluation_cantropy.py
 ```
 
 ## Visualizing Results
@@ -87,8 +87,8 @@ python run_visualization_results.py
 
 ## Citation
 ```bibtex
-@article{shahriar2023canshield,
-  title={CANShield: Deep-Learning-Based Intrusion Detection Framework for Controller Area Networks at the Signal Level}, 
+@article{shahriar2023cantropy,
+  title={cantropy: Deep-Learning-Based Intrusion Detection Framework for Controller Area Networks at the Signal Level}, 
   author={Shahriar, Md Hasan and Xiao, Yang and Moriano, Pablo and Lou, Wenjing and Hou, Y. Thomas},
   journal={IEEE Internet of Things Journal}, 
   year={2023},
