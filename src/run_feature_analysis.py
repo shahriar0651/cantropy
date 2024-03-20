@@ -8,8 +8,9 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import roc_curve, auc
 from matplotlib import pyplot as plt
-from dataset.load_dataset import *
-from helper import save_signal_map, get_list_of_files, ensure_dir, scale_plot_loss, calc_roc_auc, fit_test_pca
+from dataset import *
+# from helper import save_signal_map, get_list_of_files, ensure_dir, scale_plot_loss, calc_roc_auc, fit_test_pca
+from helpers import *
 
 @hydra.main(version_base=None, config_path="../config", config_name="syncan")
 def feature_analysis(args: dict) -> None:

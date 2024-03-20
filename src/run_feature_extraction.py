@@ -15,39 +15,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Import local modules
-from dataset.load_dataset import get_list_of_files, load_scale_data
-from training import *
-
-# Utility function to ensure directory existence
-def ensure_dir(file_directory):
-    file_directory = Path(file_directory)
-    if not file_directory.parent.exists():
-        file_directory.parent.mkdir(parents=True, exist_ok=True)
-        print("Parent directory created!")
-    return file_directory
-
-# Function to save signal mapping
-def save_signal_map(args):
-    try:
-        f_name = ensure_dir(f"{args.results_dir}/signal_mapping_{args.dataset_name}.csv")
-        signal_mapping_df = pd.read_csv(f_name, index_col=0)
-        f_name = f'{args.results_dir}/signal_mapping_{args.dataset_name}.txt'
-        with open(f_name, 'r') as json_file:
-            signal_mapping = json.load(json_file)
-    except:
-        print("Going to except...")
-        list_of_signals_dict = {args.dataset_name: args.features}
-        signal_mapping_dict = {}
-        for dataset_name, list_of_signals_dataset in list_of_signals_dict.items():
-            signal_mapping = {signal: id for id, signal in enumerate(list_of_signals_dataset)}
-            f_name = ensure_dir(f'{args.results_dir}/signal_mapping_{args.dataset_name}.txt')
-            with open(f_name, 'w') as fp:
-                json.dump(signal_mapping, fp)
-            signal_mapping_df = pd.DataFrame(pd.Series(signal_mapping), columns=['Index'])
-            signal_mapping_df['Signal'] = signal_mapping_df.index
-            f_name = ensure_dir(f"{args.results_dir}/signal_mapping_{args.dataset_name}.csv")
-            signal_mapping_df.to_csv(f_name, header=True, index=True)
-    return signal_mapping
+# from dataset.load_dataset import get_list_of_files, load_scale_data
+from dataset import *
+from helpers import *
 
 # Main function for feature extraction
 @hydra.main(version_base=None, config_path="../config", config_name="syncan")

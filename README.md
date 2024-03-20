@@ -1,9 +1,9 @@
 # cantropy
 CANtropy: Time Series Feature Extraction-Based Intrusion Detection Systems for Controller Area Networks
 
-This repository provides a deep learning-based signal-level intrusion detection framework for the CAN bus. cantropy consists of three modules: 1) a data preprocessing module that handles the high-dimensional CAN data stream at the signal level and parses them into time series suitable for a deep learning model; 2) a data analyzer module consisting of multiple deep autoencoder (AE) networks, each analyzing the time-series data from a different temporal scale and granularity; and 3) finally an attack detection module that uses an ensemble method to make the final decision.
+This repository provides the python implementation of CANtropy, a manual feature engineering-based lightweight CAN IDS. For each signal, CANtropy explores a comprehensive set of features from both temporal and statistical domains and selects only the effective subset of features in the detection pipeline to ensure scalability. Later, CANtropy uses a lightweight unsupervised anomaly detection model based on principal component analysis, to learn the mutual dependencies of the features and detect abnormal patterns in the sequence of CAN messages. The evaluation results on the advanced SynCAN dataset show that CANtropy provides a comprehensive defense against diverse types of cyberattacks with an average AUROC score of 0.992.
 
-![cantropy Workflow](doc/cantropy_workflow.jpg)
+![CANtropy Workflow](doc/cantropy_workflow.jpg)
 
 
 ## Clone cantropy
@@ -66,35 +66,31 @@ datasets/
 
 ## Building cantropy
 
-### Training multiple autoencoders
+### Feature Extraction
 ```
-python run_development_cantropy.py
+python run_feature_extraction.py -m data_type=training,testing
 ```
 
 ## Evaluating cantropy
 
-### Testing on the test dataset
+### Feature Analysis and Evaluation
 ```
-python run_evaluation_cantropy.py
+python run_feature_analysis.py
 ```
 
 ## Visualizing Results
 
-### Visualize results on the test dataset
-```
-python run_visualization_results.py
-```
+- The figures are saved in `artificts/figures` folder.
+- The results are stored in `artificts/results` folder.
 
 ## Citation
 ```bibtex
-@article{shahriar2023cantropy,
-  title={cantropy: Deep-Learning-Based Intrusion Detection Framework for Controller Area Networks at the Signal Level}, 
-  author={Shahriar, Md Hasan and Xiao, Yang and Moriano, Pablo and Lou, Wenjing and Hou, Y. Thomas},
-  journal={IEEE Internet of Things Journal}, 
+@inproceedings{shahriar2023cantropy,
+  title={CANtropy: Time series feature extraction-based intrusion detection systems for controller area networks},
+  author={Shahriar, Md Hasan and Lou, Wenjing and Hou, Y Thomas},
+  booktitle={Proceedings of Symposium on Vehicles Security and Privacy (VehicleSec)},
+  pages={1--8},
   year={2023},
-  volume={10},
-  number={24},
-  pages={22111-22127},
-  doi={10.1109/JIOT.2023.3303271}
+  doi={https://dx.doi.org/10.14722/vehiclesec.2023.23090}
 }
 ```
