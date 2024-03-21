@@ -132,7 +132,8 @@ def scale_plot_loss(args, X_test_loss, y_test_att, model_name, domain, windsize)
     y_test_att['Label'].plot()
     plt.legend([])
     plt.savefig(f"{args.plot_dir}/{dataset}/anom_score_{dataset}_{model_name}_{domain}_{windsize}.jpg", dpi=500)
-    plt.show()
+    # plt.show()
+    plt.close()
 
 def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, dataset, domain, var_th, num_of_final_feat, min_var, model_name):
     """
@@ -180,6 +181,7 @@ def calc_roc_auc(args, windsize, input_type, X_test_loss_pred, y_test_att, datas
     plt.ylabel("True Positive Rate")
     plt.tight_layout()
     plt.savefig(f"{args.plot_dir}/{dataset}/ROC_AUC_{dataset}_{model_name}_{domain}_{windsize}_{var_th}.jpg", dpi=500)
-    plt.show()
+    # plt.show()
+    plt.close()
 
     return eval_data

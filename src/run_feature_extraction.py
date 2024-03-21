@@ -16,8 +16,8 @@ import seaborn as sns
 
 # Import local modules
 # from dataset.load_dataset import get_list_of_files, load_scale_data
-from dataset import *
-from helpers import *
+from dataset.load_dataset import *
+from helpers.helper_fnc import *
 
 # Main function for feature extraction
 @hydra.main(version_base=None, config_path="../config", config_name="syncan")
@@ -222,8 +222,9 @@ def feature_extraction(args: dict) -> None:
         plt.tight_layout()
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feat_domain}.jpg"))
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feat_domain}.pdf"))
-        plt.show()
-
+        # plt.show()
+        plt.close()
+        
         plt.figure(figsize=(12, 2.5))
         var_df.T.plot(linestyle='--', marker='p', markersize='3', figsize=(12, 1.5))
         plt.legend([])
@@ -231,7 +232,8 @@ def feature_extraction(args: dict) -> None:
         plt.tight_layout()
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feat_domain}.jpg"))
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feat_domain}.pdf"))
-        plt.show()
+        # plt.show()
+        plt.close()
 
         # Plot variance vs. feature count distribution
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -240,8 +242,9 @@ def feature_extraction(args: dict) -> None:
         plt.tight_layout()
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.pdf"))
-        plt.show()
-
+        # plt.show()
+        plt.close()
+        
         # Plot boxplot variance vs. feature count distribution
         fig, ax = plt.subplots(1, 1, figsize=(10, 8))
         sns.boxplot(count_df, x='Variance Threshold', y='Feature-wise Count', color='gray', ax=ax)
@@ -251,14 +254,16 @@ def feature_extraction(args: dict) -> None:
         plt.tight_layout()
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.pdf"))
-        plt.show()
-
+        # plt.show()
+        plt.close()
+        
         # Plot lineplot variance vs. feature count distribution
         sns.lineplot(count_df, x='Variance Threshold', y='Feature-wise Count', hue='Feature', linestyle='--', linewidth='0.5', marker='p', markersize='10')
         plt.legend(bbox_to_anchor=(1, 1.05), ncols=3)
         plt.tight_layout()
         plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/lineplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
-        plt.show()
+        # plt.show()
+        plt.close()
 
 if __name__ == "__main__":
     feature_extraction()

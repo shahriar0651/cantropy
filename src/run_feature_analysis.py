@@ -9,8 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import roc_curve, auc
 from matplotlib import pyplot as plt
 from dataset import *
-# from helper import save_signal_map, get_list_of_files, ensure_dir, scale_plot_loss, calc_roc_auc, fit_test_pca
-from helpers import *
+from helpers.helper_fnc import *
 
 @hydra.main(version_base=None, config_path="../config", config_name="syncan")
 def feature_analysis(args: dict) -> None:
@@ -96,7 +95,8 @@ def feature_analysis(args: dict) -> None:
                 y_test_att['Label'].plot()
                 plt.legend([])
                 plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset_name}/loss_plot_rolling_{dataset_name}_{feat_domain}_{windsize}_{var_th}.jpg"), dpi=500)
-                plt.show()
+                # # plt.show()
+                plt.close()
                 scale_plot_loss(args, X_test_loss, y_test_att, model_name, feat_domain, windsize)
                 eval_data += calc_roc_auc(args, windsize, 'Loss', X_test_loss, y_test_att, dataset_name, feat_domain, var_th, num_of_final_feat, min_var, model_name)
 
