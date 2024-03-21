@@ -7,12 +7,12 @@ from tqdm import tqdm
 from pathlib import Path
 
 
-def generate_dataset(file_name, file_path, org_columns):
+def generate_dataset(file_name, file_path, org_features):
   
     print("Generating dataset: ", file_name)
     extd_file_dir = Path(f"{file_path.parent}/generated/{file_name}_generated.csv")   
     # Load original dataset
-    df_original = pd.read_csv(file_path, skiprows=1, names=org_columns)
+    df_original = pd.read_csv(file_path, skiprows=1, names=org_features)
     # Replace 'id' from the ID number only in SynCAN dataset
     df_original['ID'].replace("id", "", regex=True, inplace=True) 
 
@@ -69,7 +69,7 @@ def get_list_of_files(args): #data_type: str, clean_data_dir: str):
     file_dir_dict = OrderedDict(sorted(file_dir_dict.items()))
     return file_dir_dict
        
-def load_data(dataset_name, file_name, file_path, features, org_columns, per_of_samples):
+def load_data(dataset_name, file_name, file_path, features, org_features, per_of_samples):
     
     # Load dataset
     file_path = Path(file_path)
@@ -80,7 +80,7 @@ def load_data(dataset_name, file_name, file_path, features, org_columns, per_of_
         X = pd.read_csv(generated_data, index_col=0)
     else:
         print(f"{generated_data} does not exists!")
-        X = generate_dataset(file_name, file_path, org_columns)
+        X = generate_dataset(file_name, file_path, org_features)
 
 
     print(f"{file_name} loaded..")
@@ -104,41 +104,12 @@ def scale_dataset(X, dataset_name, features, scaler_dir):
     print("Dataset scalled!")
     return X
 
-def create_x_sequences(X, time_step, window_step, num_signals, sampling_period):
-    X_output = []
-    for i in range(0, (len(X) - sampling_period*time_step), window_step):
-        X_output.append(X[i : (i + sampling_period*time_step) : sampling_period])
-    print("X sequence created!")
-    return np.stack(X_output).reshape(-1, time_step, num_signals, 1)
-
-def create_y_sequences(y, time_step, window_step, sampling_period):
-    y_output = []
-    for i in range(0, (len(y) - sampling_period*time_step), window_step):
-        if y[i : (i + sampling_period*time_step)].sum() > 0:
-            y_output.append(1)
-        else:
-            y_output.append(0)
-    print("y sequence created!")
-    return np.stack(y_output)
-
 def load_scale_data(args, file_name, file_path):
     dataset_name = args.dataset_name
-    org_columns = args.org_columns
+    org_features = args.org_features
     features = args.features
     per_of_samples = args.per_of_samples
     scaler_dir = args.scaler_dir
-    X, y = load_data(dataset_name, file_name, file_path, features, org_columns, per_of_samples)
+    X, y = load_data(dataset_name, file_name, file_path, features, org_features, per_of_samples)
     X = scale_dataset(X, dataset_name, features, scaler_dir)
     return X, y
-
-def load_data_create_images(args, file_name, file_path):
-
-    time_step = args.time_step
-    window_step = args.window_step
-    num_signals = args.num_signals
-    sampling_period = args.sampling_period
-    
-    X, y = load_scale_data(args, file_name, file_path)
-    x_seq = create_x_sequences(X.values, time_step, window_step, num_signals, sampling_period)
-    y_seq = create_y_sequences(y, time_step, window_step, sampling_period)
-    return x_seq, y_seq

@@ -1,7 +1,7 @@
 # cantropy
 CANtropy: Time Series Feature Extraction-Based Intrusion Detection Systems for Controller Area Networks
 
-This repository provides the python implementation of CANtropy, a manual feature engineering-based lightweight CAN IDS. For each signal, CANtropy explores a comprehensive set of features from both temporal and statistical domains and selects only the effective subset of features in the detection pipeline to ensure scalability. Later, CANtropy uses a lightweight unsupervised anomaly detection model based on principal component analysis, to learn the mutual dependencies of the features and detect abnormal patterns in the sequence of CAN messages. The evaluation results on the advanced SynCAN dataset show that CANtropy provides a comprehensive defense against diverse types of cyberattacks with an average AUROC score of 0.992.
+This repository provides the python implementation of CANtropy, a manual feature engineering-based lightweight CAN IDS. For each signal, CANtropy explores a comprehensive set of features from both temporal and statistical domains and selects only the effective subset of features in the detection pipeline to ensure scalability. Later, CANtropy uses a lightweight unsupervised anomaly detection model based on principal component analysis, to learn the mutual dependencies of the features and detect abnormal patterns in the sequence of CAN messages. The evaluation results on the advanced SynCAN dataset show that CANtropy provides a comprehensive defense against diverse types of cyberattacks.
 
 ![CANtropy Workflow](doc/cantropy_workflow.jpg)
 
@@ -64,24 +64,22 @@ datasets/
         └── README.md
 ```
 
-## Building cantropy
+## Implementing cantropy
 
 ### Feature Extraction
 ```
 python run_feature_extraction.py -m data_type=training,testing
 ```
 
-## Evaluating cantropy
-
 ### Feature Analysis and Evaluation
 ```
 python run_feature_analysis.py
 ```
 
-## Visualizing Results
+## Visualization and Results
 
 - The figures are saved in `artificts/figures` folder.
-- The results are stored in `artificts/results` folder.
+- The results are saved in `artificts/results` folder.
 
 ## Citation
 ```bibtex

@@ -43,30 +43,33 @@ def feature_extraction(args: dict) -> None:
     # Get file directory dictionary
     file_dir_dict = get_list_of_files(args)
 
+    #=========================================================
+    #   1. Generate all the features if not already generated
+    #=========================================================
     load = False
     generate = True
 
     # Process each file
     for file_name, file_path in tqdm(file_dir_dict.items(), desc="Files processed"):
-        windsizes_missing_dict = {feature_type: [] for feature_type in args.feature_type_list}
+        windsizes_missing_dict = {feat_domain: [] for feat_domain in args.domain_list}
         df_windows_file = pd.DataFrame([])
 
         # Process each feature type and windsize
-        for feature_type in args.feature_type_list:
+        for feat_domain in args.domain_list:
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feature_type}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if not load:
                         continue
                     df_windows_feature = pd.read_csv(f_name, index_col=0)
                     df_windows_file = pd.concat([df_windows_file, df_windows_feature], axis=1, ignore_index=False)
-                    feats_dict[feature_type] = df_windows_feature.columns
-                    windsizes_missing_dict[feature_type].append(0)
+                    feats_dict[feat_domain] = df_windows_feature.columns
+                    windsizes_missing_dict[feat_domain].append(0)
                 else:
                     if not generate:
                         continue
-                    windsizes_missing_dict[feature_type].append(windsize)
+                    windsizes_missing_dict[feat_domain].append(windsize)
 
         df_windows_final = pd.concat([df_windows_final, df_windows_file], axis=0, ignore_index=True)
 
@@ -84,9 +87,9 @@ def feature_extraction(args: dict) -> None:
                 print(f"Skipping dataset {file_name}")
 
             # Extract features for missing windsizes
-            for feature_type in args.feature_type_list:
-                cgf_file = tsfel.get_features_by_domain(feature_type)
-                windsizes_missing = windsizes_missing_dict[feature_type].copy()
+            for feat_domain in args.domain_list:
+                cgf_file = tsfel.get_features_by_domain(feat_domain)
+                windsizes_missing = windsizes_missing_dict[feat_domain].copy()
 
                 for windsize in windsizes_missing:
                     df_windows_file = pd.DataFrame([])
@@ -96,27 +99,29 @@ def feature_extraction(args: dict) -> None:
                         y_cut = y_train[i * args.batch_size:(i + 1) * args.batch_size].copy()
                         df_windows = tsfel.time_series_features_extractor(cgf_file, X_train[i * args.batch_size:(i + 1) * args.batch_size], window_size=windsize, fs=50, resample_rate=100, n_jobs=-1)
                         df_windows['File'] = file_name
-                        df_windows['Feature'] = feature_type
+                        df_windows['Feature'] = feat_domain
                         df_windows['Window'] = windsize
                         df_windows['Label'] = y_cut.rolling(windsize).max().dropna().iloc[::windsize].values
 
                         df_windows_file = pd.concat([df_windows_file, df_windows], ignore_index=True)
 
-                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feature_type}_{windsize}.csv")
+                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
                     df_windows_file.to_csv(f_name, index=True, header=True)
 
-    # Combine all data
+    #=========================================================
+    #   2. Combine all the features that are generated already
+    #=========================================================
     load = True
     generate = False
 
-    for feature_type in args.feature_type_list:
+    for feat_domain in args.domain_list:
         df_windows_final = pd.DataFrame([])
 
         for file_name, file_path in tqdm(file_dir_dict.items(), desc="Files processed"):
             df_windows_file = pd.DataFrame([])
 
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feature_type}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if load:
@@ -129,7 +134,7 @@ def feature_extraction(args: dict) -> None:
         df_windows_feats = df_windows_final[['File', 'Feature', 'Window', 'Label']].copy()
 
         # Scale features
-        scaler_filename = f"{args.scaler_dir}//scaler_data_{args.dataset_name}_{feature_type}_{windsize}.save"
+        scaler_filename = f"{args.scaler_dir}//scaler_data_{args.dataset_name}_{feat_domain}_{windsize}.save"
 
         if data_type == 'training':
             scaler_data = MinMaxScaler()
@@ -146,14 +151,10 @@ def feature_extraction(args: dict) -> None:
         df_windows_final = df_windows_final.ffill()
         df_windows_final = df_windows_final.bfill()
         df_windows_final = df_windows_final.fillna(0.0)
-        #---------------------------
-        f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_clean_{args.dataset_name}_{data_type}_{feature_type}_{windsize}.csv")
+
+        f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_clean_{args.dataset_name}_{data_type}_{feat_domain}_{windsize}.csv")
         df_windows_final.to_csv(f_name, index=True, header=True)
         print(f_name, "saved!!!")
-
-        # Analyze variance
-        # if data_type == 'testing':
-        #     return None
         
         # Get variance of each feature
         non_string_features = df_windows_final.select_dtypes(exclude=['object']).columns.tolist()
@@ -184,26 +185,8 @@ def feature_extraction(args: dict) -> None:
             df_var = pd.DataFrame(df_windows_var[list_of_features].values, index=list_of_unique_feat, columns=[signal_name])
             feature_df = pd.concat([feature_df, df_var], axis=1, ignore_index=False)   
 
-        # Plot variance
         var_df = feature_df.groupby(['Feature']).max()[features]
         var_df = var_df.T[var_df.median(axis=1).sort_values().index.to_list()]
-
-        plt.figure(figsize=(12, 2.5))
-        boxplot = var_df.boxplot()  
-        plt.xticks(rotation=90)
-        plt.tight_layout()
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feature_type}.jpg"))
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feature_type}.pdf"))
-        plt.show()
-
-        plt.figure(figsize=(12, 2.5))
-        var_df.T.plot(linestyle='--', marker='p', markersize='3', figsize=(12, 1.5))
-        plt.legend([])
-        plt.xticks(rotation=90)
-        plt.tight_layout()
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feature_type}.jpg"))
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feature_type}.pdf"))
-        plt.show()
 
         # List of features with different variance threshold
         var_list = np.arange(0, 30, 2)/100
@@ -220,14 +203,43 @@ def feature_extraction(args: dict) -> None:
 
         count_df['Feature-wise Count'] = count_df['Feature-wise Count']/len(features)*100
         count_df_total['Feature-wise Count'] = count_df_total['Feature-wise Count']
+        
+        # Save variance data
+        f_name = ensure_dir(f"{args.results_dir}/variance_mapping_matrix_{dataset}_{data_type}_{feat_domain}_{windsize}.csv")
+        feature_df.to_csv(f_name, header=True, index=True)
+
+        f_name = ensure_dir(f"{args.results_dir}/variance_matrix_{dataset}_{data_type}_{feat_domain}_{windsize}.csv")
+        var_df.to_csv(f_name, header=True, index=True)
+
+        #=============================================================
+        #   3. Generate graph based on the extracted features/variance
+        #=============================================================
+        
+        # Plot feature extraction results
+        plt.figure(figsize=(12, 2.5))
+        boxplot = var_df.boxplot()  
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feat_domain}.jpg"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_box_plot_{data_type}_{dataset}_{feat_domain}.pdf"))
+        plt.show()
+
+        plt.figure(figsize=(12, 2.5))
+        var_df.T.plot(linestyle='--', marker='p', markersize='3', figsize=(12, 1.5))
+        plt.legend([])
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feat_domain}.jpg"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_line_plot_{data_type}_{dataset}_{feat_domain}.pdf"))
+        plt.show()
 
         # Plot variance vs. feature count distribution
         fig, ax = plt.subplots(1, 1, figsize=(6, 6))
         sns.lineplot(count_df_total, x='Variance Threshold', y='Feature-wise Count', linestyle='--', linewidth='0.5', marker='p', markersize='10', ax=ax)
         plt.grid(True)
         plt.tight_layout()
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feature_type}.jpg"))
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feature_type}.pdf"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.pdf"))
         plt.show()
 
         # Plot boxplot variance vs. feature count distribution
@@ -237,23 +249,16 @@ def feature_extraction(args: dict) -> None:
         plt.legend(bbox_to_anchor=(1, 1), ncols=3)
         plt.grid(True)
         plt.tight_layout()
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feature_type}.jpg"))
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feature_type}.pdf"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/boxplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.pdf"))
         plt.show()
 
         # Plot lineplot variance vs. feature count distribution
         sns.lineplot(count_df, x='Variance Threshold', y='Feature-wise Count', hue='Feature', linestyle='--', linewidth='0.5', marker='p', markersize='10')
         plt.legend(bbox_to_anchor=(1, 1.05), ncols=3)
         plt.tight_layout()
-        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/lineplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feature_type}.jpg"))
+        plt.savefig(ensure_dir(f"{args.plot_dir}/{dataset}/lineplot_variance_vs_feature_count_dist_{data_type}_{dataset}_{feat_domain}.jpg"))
         plt.show()
-
-        # Save variance data
-        f_name = ensure_dir(f"{args.results_dir}/feature_matrix_{dataset}_{data_type}_{feature_type}_{windsize}.csv")
-        feature_df.to_csv(f_name, header=True, index=True)
-
-        f_name = ensure_dir(f"{args.results_dir}/variance_matrix_{dataset}_{data_type}_{feature_type}_{windsize}.csv")
-        var_df.to_csv(f_name, header=True, index=True)
 
 if __name__ == "__main__":
     feature_extraction()

@@ -5,7 +5,7 @@ from typing import Dict
 
 import pandas as pd
 from dataset.load_dataset import *
-from helper import *
+from helpers import *
 
 from sklearn.decomposition import PCA
 from sklearn.metrics import roc_curve, auc
