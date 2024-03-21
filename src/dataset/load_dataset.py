@@ -96,7 +96,7 @@ def get_list_of_files(args): #data_type: str, clean_data_dir: str):
     file_dir_dict = OrderedDict(sorted(file_dir_dict.items()))
     return file_dir_dict
        
-def load_data(dataset_name, file_name, file_path, features, org_features, per_of_samples):
+def load_data(dataset_name, file_name, file_path, features, org_features, dataset_fractions):
     
     # Load dataset
     file_path = Path(file_path)
@@ -112,7 +112,7 @@ def load_data(dataset_name, file_name, file_path, features, org_features, per_of
 
     print(f"{file_name} loaded..")
     # Defining the number of samples 
-    num_of_samples = int(X.shape[0]*per_of_samples)
+    num_of_samples = int(X.shape[0]*dataset_fractions)
     y = X['Label'].iloc[0:num_of_samples]
     X = X[features].iloc[:num_of_samples].astype(float)
     print("Forward filling...")
@@ -135,8 +135,8 @@ def load_scale_data(args, file_name, file_path):
     dataset_name = args.dataset_name
     org_features = args.org_features
     features = args.features
-    per_of_samples = args.per_of_samples
+    dataset_fractions = args.dataset_fractions
     scaler_dir = args.scaler_dir
-    X, y = load_data(dataset_name, file_name, file_path, features, org_features, per_of_samples)
+    X, y = load_data(dataset_name, file_name, file_path, features, org_features, dataset_fractions)
     X = scale_dataset(X, dataset_name, features, scaler_dir)
     return X, y

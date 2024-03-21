@@ -76,6 +76,15 @@ python run_feature_extraction.py -m data_type=training,testing
 python run_feature_analysis.py
 ```
 
+## Unit Test
+- To run the scripts on a smaller fraction of dataset add the argument ```dataset_fraction=<any fraction within 0.0 to 1.0>```
+- For instance, to run the scripts on the first 10% of the data points (both training and testing):
+  
+  ```python
+  python run_feature_extraction.py -m data_type=training,testing dataset_fraction=0.10
+  python run_feature_analysis.py dataset_fraction=0.10
+  ```
+  
 ## Visualization and Results
 
 - The figures are saved in `artificts/figures` folder.

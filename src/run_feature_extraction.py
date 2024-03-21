@@ -84,7 +84,7 @@ def feature_extraction(args: dict) -> None:
         # Process each feature type and windsize
         for feat_domain in args.domain_list:
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fractions}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if not load:
@@ -132,7 +132,7 @@ def feature_extraction(args: dict) -> None:
 
                         df_windows_file = pd.concat([df_windows_file, df_windows], ignore_index=True)
 
-                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
+                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fractions}_{feat_domain}_{windsize}.csv")
                     df_windows_file.to_csv(f_name, index=True, header=True)
 
     #=========================================================
@@ -148,7 +148,7 @@ def feature_extraction(args: dict) -> None:
             df_windows_file = pd.DataFrame([])
 
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.per_of_samples}_{feat_domain}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fractions}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if load:
