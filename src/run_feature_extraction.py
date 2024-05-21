@@ -99,14 +99,13 @@ def feature_extraction(args: dict) -> None:
                     windsizes_missing_dict[feat_domain].append(windsize)
 
         df_windows_final = pd.concat([df_windows_final, df_windows_file], axis=0, ignore_index=True)
-
         # Check if all features are extracted
         if sum(sum(v) for v in windsizes_missing_dict.values()) == 0:
             print(f"All the features are extracted from {file_name}")
         else:
             print(f"Loading the features for windows", windsizes_missing_dict)
             print("Loading dataset:", file_name)
-
+   
             try:
                 X_train, y_train = load_scale_data(args, file_name, file_path)
             except Exception as error:

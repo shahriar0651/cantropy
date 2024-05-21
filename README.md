@@ -90,6 +90,13 @@ python run_feature_analysis.py
 - The figures are saved in `artificts/figures` folder.
 - The results are saved in `artificts/results` folder.
 
+## Evaluate on ROAD Dataset
+- Use the following argument after each of the command: `--config-name road`
+- For example:
+  ```python
+  python run_feature_extraction.py --config-name road
+  ```
+  
 ## Citation
 ```bibtex
 @inproceedings{shahriar2023cantropy,
