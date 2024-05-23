@@ -25,11 +25,23 @@
 # Email: hshahriar@vt.edu
 #
 
-# Downloading Road dataset from the github repo
-cd ../../datasets/can-ids/road/
-wget ....
-unzip 'road.zip'
-echo "Unzipped training/testing dataset in datasets/can-ids/road/"
-rm -rf *.zip
-echo "SyncCAN Data Downloaded!"
-#TODO: Remove non-ambient files from the signal_extraction/ambient folder
+#TODO: Downloading Road dataset from the github repo
+#FIXME: Remove non-ambient files from the signal_extraction/ambient folder
+
+echo
+echo
+echo "**************************** Attention ********************************"
+echo "Automatic download of ROAD dataset is unavailable so far"
+echo "Please donwload and copy the ROAD dataset in the following directory: "
+echo "../../datasets/can-ids/road/"
+echo "************************************************************************"
+echo
+echo
+
+# cd ../../datasets/can-ids/road/
+# wget ....
+# unzip 'road.zip'
+# echo "Unzipped training/testing dataset in datasets/can-ids/road/"
+# rm -rf *.zip
+# echo "ROAD Data Downloaded!"
+
