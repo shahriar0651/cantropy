@@ -59,4 +59,4 @@ varianceThresholds: [0.0, 0.005, 0.01, 0.015, 0.02]
 
 # Additional parameters
 num_signals: 20
-dataset_fraction: 1.00  # (0.00 - 1.00] where 1.00 means evaluation on 100% of data points
+fraction: 1.00  # (0.00 - 1.00] where 1.00 means evaluation on 100% of data points

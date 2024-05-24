@@ -78,13 +78,20 @@ def feature_extraction(args: dict) -> None:
 
     # Process each file
     for file_name, file_path in tqdm(file_dir_dict.items(), desc="Files processed"):
+
+        #TODO: Skip too large files ----------------
+        print(f"Starting File : {file_path}")
+        if 'ambient_highway_street_driving_long.csv' in file_path:
+            print(f"File : {file_name}\n Skipping as the file is too large")
+            continue
+        #--------------------------------------
         windsizes_missing_dict = {feat_domain: [] for feat_domain in args.domain_list}
         df_windows_file = pd.DataFrame([])
 
         # Process each feature type and windsize
         for feat_domain in args.domain_list:
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fraction}_{feat_domain}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.fraction}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if not load:
@@ -99,14 +106,13 @@ def feature_extraction(args: dict) -> None:
                     windsizes_missing_dict[feat_domain].append(windsize)
 
         df_windows_final = pd.concat([df_windows_final, df_windows_file], axis=0, ignore_index=True)
-
         # Check if all features are extracted
         if sum(sum(v) for v in windsizes_missing_dict.values()) == 0:
             print(f"All the features are extracted from {file_name}")
         else:
             print(f"Loading the features for windows", windsizes_missing_dict)
             print("Loading dataset:", file_name)
-
+   
             try:
                 X_train, y_train = load_scale_data(args, file_name, file_path)
             except Exception as error:
@@ -132,7 +138,7 @@ def feature_extraction(args: dict) -> None:
 
                         df_windows_file = pd.concat([df_windows_file, df_windows], ignore_index=True)
 
-                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fraction}_{feat_domain}_{windsize}.csv")
+                    f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.fraction}_{feat_domain}_{windsize}.csv")
                     df_windows_file.to_csv(f_name, index=True, header=True)
 
     #=========================================================
@@ -148,7 +154,7 @@ def feature_extraction(args: dict) -> None:
             df_windows_file = pd.DataFrame([])
 
             for windsize in args.windsizes:
-                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.dataset_fraction}_{feat_domain}_{windsize}.csv")
+                f_name = ensure_dir(f"{args.features_dir}/df_windows_tsfel_{args.dataset_name}_{file_name}_{args.fraction}_{feat_domain}_{windsize}.csv")
 
                 if file_exists(f_name):
                     if load:

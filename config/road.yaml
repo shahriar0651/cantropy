@@ -1,0 +1,81 @@
+# Dataset information
+dataset_name: road
+data_type: training  # testing (override)
+
+# Directories
+root_dir: 'none'  # Dummy value, will be assigned dynamically
+data_dir: 'none'  # Dummy value, will be assigned dynamically
+train_data_dir: ../../datasets/can-ids/road/signal_extractions/ambient
+test_data_dir: ../../datasets/can-ids/road/signal_extractions/attacks
+scaler_dir: ../scaler/
+features_dir: ../artifacts/features/
+results_dir: ../artifacts/results/
+plot_dir: ../artifacts/figures/
+
+# Features
+org_features:
+- 'Label'
+- 'Time'
+- 'ID'
+- Signal1_of_ID
+- Signal2_of_ID
+- Signal3_of_ID
+- Signal4_of_ID
+- Signal5_of_ID
+- Signal6_of_ID
+- Signal7_of_ID
+- Signal8_of_ID
+- Signal9_of_ID
+- Signal10_of_ID
+- Signal11_of_ID
+- Signal12_of_ID
+- Signal13_of_ID
+- Signal14_of_ID
+- Signal15_of_ID
+- Signal16_of_ID
+- Signal17_of_ID
+- Signal18_of_ID
+- Signal19_of_ID
+- Signal20_of_ID
+- Signal21_of_ID
+- Signal22_of_ID
+
+features: 
+- Sig_7_of_ID_1413
+- Sig_5_of_ID_930
+- Sig_6_of_ID_1621
+- Sig_7_of_ID_186
+- Sig_2_of_ID_692
+- Sig_4_of_ID_1628
+- Sig_2_of_ID_1255
+- Sig_5_of_ID_1668
+- Sig_4_of_ID_1760
+- Sig_3_of_ID_1760
+- Sig_6_of_ID_208
+- Sig_2_of_ID_1760
+- Sig_1_of_ID_1760
+- Sig_2_of_ID_526
+- Sig_4_of_ID_1176
+- Sig_6_of_ID_167
+- Sig_3_of_ID_208
+- Sig_14_of_ID_1455
+- Sig_1_of_ID_661
+- Sig_1_of_ID_192
+- Sig_1_of_ID_1227
+
+# Attributes
+attributes:
+  - 'File'
+  - 'Feature'
+  - 'Window'
+  - 'Label'
+
+# CANTropy Parameters
+windsizes: [500]
+batch_size: 1000000
+domain_list: ['temporal', 'statistical']
+varianceThresholds: [0.0, 0.005, 0.01, 0.015, 0.02]
+
+# Additional parameters
+num_signals: 20
+fraction: 1.00  # (0.00 - 1.00] where 1.00 means evaluation on 100% of data points

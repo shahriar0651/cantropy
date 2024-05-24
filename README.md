@@ -36,13 +36,19 @@ mamba activate cantropy
 
 ## Download Dataset
 
-### Download SynCAN Dataset
+### Download SynCAN and ROAD Datasets
 
 ```
 cd src
+
 chmod +x download_syncan_dataset.sh
 ./download_syncan_dataset.sh
+
+chmod +x download_road_dataset.sh
+./download_road_dataset.sh
 ```
+
+
 
 Here is the tree file structure after downloading the synCAN dataset:
 ```
@@ -67,22 +73,41 @@ datasets/
 ## Implementing cantropy
 
 ### Feature Extraction
+```python
+python run_feature_extraction.py --config-name <dataset> -m data_type=training,testing
 ```
-python run_feature_extraction.py -m data_type=training,testing
-```
+
+  - For Example: 
+    ```python
+    python run_feature_extraction.py --config-name syncan -m data_type=training,testing
+
+    python run_feature_extraction.py --config-name road -m data_type=training,testing
+    ```
 
 ### Feature Analysis and Evaluation
-```
-python run_feature_analysis.py
+```python
+python run_feature_analysis.py --config-name <dataset>
 ```
 
+- For Example: 
+  ```python
+  python run_feature_analysis.py --config-name syncan
+
+  python run_feature_analysis.py --config-name road
+  ```
+
 ## Unit Test
-- To run the scripts on a smaller fraction of dataset add the argument ```dataset_fraction=<any fraction within 0.0 to 1.0>```
+- To run the scripts on a smaller fraction of dataset add the argument ```fraction=<any fraction within 0.0 to 1.0>```
 - For instance, to run the scripts on the first 10% of the data points (both training and testing):
   
   ```python
-  python run_feature_extraction.py -m data_type=training,testing dataset_fraction=0.10
-  python run_feature_analysis.py dataset_fraction=0.10
+  python run_feature_extraction.py --config-name syncan -m data_type=training,testing fraction=0.10
+  python run_feature_analysis.py fraction=0.10
+  ```
+
+    ```python
+  python run_feature_extraction.py --config-name road -m data_type=training,testing fraction=0.10
+  python run_feature_analysis.py fraction=0.10
   ```
   
 ## Visualization and Results
@@ -90,6 +115,7 @@ python run_feature_analysis.py
 - The figures are saved in `artificts/figures` folder.
 - The results are saved in `artificts/results` folder.
 
+  
 ## Citation
 ```bibtex
 @inproceedings{shahriar2023cantropy,
