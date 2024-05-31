@@ -36,6 +36,18 @@ mamba activate cantropy
 
 ## Download Dataset
 
+### Create Symbolic Link (Optional)
+If you have the the datasets already downloaded elsewhere (outside of the repo), you can create a symbolic link to show the those dataset folders wihtin the repository. To create symbolic link from the repository's directory:
+
+```
+cd <directory_to_cantropy>
+ln -s <directory_to_dataset_can-ids>/ datasets/
+```
+
+For example, if `/home/workspace/datasets/can-ids/` folder contains the SynCAN and ROAD dataset, you can follow:
+```
+ln -s /home/workspace/datasets/can-ids/ datasets/
+```
 ### Download SynCAN and ROAD Datasets
 
 ```
@@ -50,31 +62,97 @@ chmod +x download_road_dataset.sh
 
 
 
-Here is the tree file structure after downloading the synCAN dataset:
+Here is the folder structure of the repository: 
 ```
-datasets/
-└── can-ids/
-    └── syncan
-        ├── ambients
-        │   ├── train_1.csv
-        │   ├── train_2.csv
-        │   ├── train_3.csv
-        │   └── train_4.csv
-        ├── attacks
-        │   ├── test_continuous.csv
-        │   ├── test_flooding.csv
-        │   ├── test_plateau.csv
-        │   ├── test_playback.csv
-        │   └── test_suppress.csv
-        ├── License terms.txt
-        └── README.md
+.
+├── config
+│   ├── road.yaml
+│   └── syncan.yaml
+├── datasets
+│   └── can-ids
+├── dependency
+│   ├── environment.yaml
+│   └── requirements.txt
+├── doc
+│   └── cantropy_workflow.jpg
+├── LICENSE
+├── README.md
+├── scaler
+│   ├── min_max_values_road.csv
+│   ├── min_max_values_syncan.csv
+└── src
+    ├── dataset
+    ├── helpers
+    ├── download_road_dataset.sh
+    ├── download_syncan_dataset.sh
+    ├── run_feature_analysis.py
+    └── run_feature_extraction.py
 ```
+Here is the detailed tree structure of the datasets folder (after you download both of them):
 
+```
+.
+└── datasets
+    └── can-ids
+        ├── road
+        │   ├── ambient
+        │   ├── attacks
+        │   ├── data_table.csv
+        │   ├── readme.md
+        │   └── signal_extractions
+        │       ├── ambient
+        │       │   ├── ambient_dyno_drive_basic_long.csv
+        │       │   ├── ambient_dyno_drive_basic_short.csv
+        │       │   ├── ambient_dyno_drive_benign_anomaly.csv
+        │       │   ├── ambient_dyno_drive_extended_long.csv
+        │       │   ├── ambient_dyno_drive_extended_short.csv
+        │       │   ├── ambient_dyno_drive_radio_infotainment.csv
+        │       │   ├── ambient_dyno_drive_winter.csv
+        │       │   ├── ambient_dyno_exercise_all_bits.csv
+        │       │   ├── ambient_dyno_idle_radio_infotainment.csv
+        │       │   ├── ambient_dyno_reverse.csv
+        │       │   ├── ambient_highway_street_driving_diagnostics.csv
+        │       │   ├── ambient_highway_street_driving_long.csv
+        │       ├── attacks
+        │       │   ├── accelerator_attack_drive_1.csv
+        │       │   ├── accelerator_attack_drive_2.csv
+        │       │   ├── accelerator_attack_reverse_1.csv
+        │       │   ├── accelerator_attack_reverse_2.csv
+        │       │   ├── correlated_signal_attack_1_masquerade.csv
+        │       │   ├── correlated_signal_attack_2_masquerade.csv
+        │       │   ├── correlated_signal_attack_3_masquerade.csv
+        │       │   ├── max_engine_coolant_temp_attack_masquerade.csv
+        │       │   ├── max_speedometer_attack_1_masquerade.csv
+        │       │   ├── max_speedometer_attack_2_masquerade.csv
+        │       │   ├── max_speedometer_attack_3_masquerade.csv
+        │       │   ├── metadata.json
+        │       │   ├── reverse_light_off_attack_1_masquerade.csv
+        │       │   ├── reverse_light_off_attack_2_masquerade.csv
+        │       │   ├── reverse_light_off_attack_3_masquerade.csv
+        │       │   ├── reverse_light_on_attack_1_masquerade.csv
+        │       │   ├── reverse_light_on_attack_2_masquerade.csv
+        │       │   └── reverse_light_on_attack_3_masquerade.csv
+        │       └── DBC
+        └── syncan
+            ├── ambients
+            │   ├── train_1.csv
+            │   ├── train_2.csv
+            │   ├── train_3.csv
+            │   └── train_4.csv
+            ├── attacks
+            │   ├── test_continuous.csv
+            │   ├── test_flooding.csv
+            │   ├── test_plateau.csv
+            │   ├── test_playback.csv
+            │   └── test_suppress.csv
+            ├── License terms.txt
+            └── README.md
+```
 ## Implementing cantropy
 
 ### Feature Extraction
 ```python
-python run_feature_extraction.py --config-name <dataset> -m data_type=training,testing
+python run_feature_extraction.py --config-name <dataset_name> -m data_type=training,testing
 ```
 
   - For Example: 
@@ -86,7 +164,7 @@ python run_feature_extraction.py --config-name <dataset> -m data_type=training,t
 
 ### Feature Analysis and Evaluation
 ```python
-python run_feature_analysis.py --config-name <dataset>
+python run_feature_analysis.py --config-name <dataset_name>
 ```
 
 - For Example: 

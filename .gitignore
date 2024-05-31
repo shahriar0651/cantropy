@@ -1,5 +1,5 @@
 artifacts/*
-dataset/can-ids
+datasets/can-ids
 __pycache__/
 */__pycache__/
 */*/__pycache__/

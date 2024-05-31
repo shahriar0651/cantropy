@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # MIT License
 #
 # Copyright (c) 2023 Md Hasan Shahriar
@@ -28,15 +30,22 @@
 #TODO: Downloading Road dataset from the github repo
 #FIXME: Remove non-ambient files from the signal_extraction/ambient folder
 
-echo
-echo
-echo "**************************** Attention ********************************"
-echo "Automatic download of ROAD dataset is unavailable so far"
-echo "Please donwload and copy the ROAD dataset in the following directory: "
-echo "../../datasets/can-ids/road/"
-echo "************************************************************************"
-echo
-echo
+DIRECTORY="../datasets/can-ids/road/"
+# Downloading road dataset from the github repo
+if [ -d "$DIRECTORY" ]; then
+  echo "The folder $DIRECTORY already exists." 
+  echo "To update the dataset please delete $DIRECTORY and run this script again."
+else
+  echo
+  echo
+  echo "**************************** Attention ********************************"
+  echo "Automatic download of ROAD dataset is unavailable so far"
+  echo "Please donwload and copy the ROAD dataset in the following directory: "
+  echo "../../datasets/can-ids/road/"
+  echo "************************************************************************"
+  echo
+  echo
+fi
 
 # cd ../../datasets/can-ids/road/
 # wget ....

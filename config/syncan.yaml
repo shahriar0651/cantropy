@@ -5,8 +5,8 @@ data_type: training  # testing (override)
 # Directories
 root_dir: 'none'  # Dummy value, will be assigned dynamically
 data_dir: 'none'  # Dummy value, will be assigned dynamically
-train_data_dir: ../../datasets/can-ids/syncan/ambients
-test_data_dir: ../../datasets/can-ids/syncan/attacks
+train_data_dir: ../datasets/can-ids/syncan/ambients
+test_data_dir: ../datasets/can-ids/syncan/attacks
 scaler_dir: ../scaler/
 features_dir: ../artifacts/features/
 results_dir: ../artifacts/results/
