@@ -27,20 +27,29 @@
 # Email: hshahriar@vt.edu
 #
 
-DIRECTORY="../datasets/can-ids/syncan/"
-# Downloading syncan dataset from the github repo
+DEFAULT_DIRECTORY="../../datasets/can-ids/syncan/"
+echo "Enter the directory to download the dataset"
+echo "or just press Enter to accept following default directory:"
+read -p "[${DEFAULT_DIRECTORY}]:" USER_DIRECTORY
+DIRECTORY="${USER_DIRECTORY:-$DEFAULT_DIRECTORY}"
+
+
 if [ -d "$DIRECTORY" ]; then
   echo "The folder $DIRECTORY already exists." 
-  echo "To update the dataset please delete $DIRECTORY and run this script again."
+  rm -rf "$DIRECTORY"
+  echo "The existing files have been deleted!"
+  echo "Downloading new files...."
 else
-  git clone https://github.com/etas/SynCAN.git "$DIRECTORY"
-  echo "Raw SynCAN dataset downloaded in $DIRECTORY"
-  cd ../datasets/can-ids/syncan/
-  unzip 'train_*.zip' -d ambients
-  echo "Unzipped training dataset in datasets/can-ids/syncan/ambients"
-  unzip 'test_*.zip' -d attacks
-  echo "Unzipped training dataset in datasets/can-ids/syncan/attacks" 
-  rm -rf *.zip
-  rm -rf attacks/test_normal*
-  echo "SyncCAN Data Downloaded!"
+  echo "The directory $DIRECTORY created." 
 fi
+
+git clone https://github.com/etas/SynCAN.git "$DIRECTORY"
+echo "Raw SynCAN dataset downloaded in $DIRECTORY"
+cd "$DIRECTORY"
+unzip 'train_*.zip' -d ambients
+echo "Unzipped training dataset in datasets/can-ids/syncan/ambients"
+unzip 'test_*.zip' -d attacks
+echo "Unzipped training dataset in datasets/can-ids/syncan/attacks" 
+rm -rf *.zip
+rm -rf attacks/test_normal*
+echo "SyncCAN Data Downloaded!"

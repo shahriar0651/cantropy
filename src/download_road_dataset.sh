@@ -27,30 +27,27 @@
 # Email: hshahriar@vt.edu
 #
 
-#TODO: Downloading Road dataset from the github repo
-#FIXME: Remove non-ambient files from the signal_extraction/ambient folder
+DEFAULT_DIRECTORY="../../datasets/can-ids/road/"
+echo "Enter the directory to download the dataset"
+echo "or just press Enter to accept following default directory:"
+read -p "[${DEFAULT_DIRECTORY}]:" USER_DIRECTORY
+DIRECTORY="${USER_DIRECTORY:-$DEFAULT_DIRECTORY}"
 
-DIRECTORY="../datasets/can-ids/road/"
-# Downloading road dataset from the github repo
+
 if [ -d "$DIRECTORY" ]; then
   echo "The folder $DIRECTORY already exists." 
-  echo "To update the dataset please delete $DIRECTORY and run this script again."
+  rm -rf "$DIRECTORY"
+  echo "The existing files have been deleted!"
+  echo "Downloading new files...."
 else
-  echo
-  echo
-  echo "**************************** Attention ********************************"
-  echo "Automatic download of ROAD dataset is unavailable so far"
-  echo "Please donwload and copy the ROAD dataset in the following directory: "
-  echo "../../datasets/can-ids/road/"
-  echo "************************************************************************"
-  echo
-  echo
+  echo "The directory $DIRECTORY created." 
 fi
 
-# cd ../../datasets/can-ids/road/
-# wget ....
-# unzip 'road.zip'
-# echo "Unzipped training/testing dataset in datasets/can-ids/road/"
-# rm -rf *.zip
-# echo "ROAD Data Downloaded!"
+mkdir "$DIRECTORY" && cd "$DIRECTORY"
+wget https://zenodo.org/records/10462796/files/road.zip
+unzip -o road.zip -d ../
+echo "Unzipped road dataset in datasets/can-ids/road/"
+rm -rf *.zip
+find signal_extractions/ambient/ -type f ! -name 'ambient_*' -exec rm {} +
+echo "ROAD Data Downloaded!"
 
