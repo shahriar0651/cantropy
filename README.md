@@ -14,13 +14,13 @@ cd cantropy
 ```
 
 ## Install Mambaforge
-### Download and Install Mambaforge
+#### Download and Install Mambaforge
 ```
 wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh
 chmod +x Mambaforge-$(uname)-$(uname -m).sh
 ./Mambaforge-$(uname)-$(uname -m).sh
 ```
-### Create Environment
+#### Create Environment
 ```
 mamba env create --file dependency/environment.yaml
 ```
@@ -29,14 +29,14 @@ Or update the existing env
 mamba env update --file dependency/environment.yaml --prune
 ```
 
-### Activate Environment
+#### Activate Environment
 ```
 mamba activate cantropy
 ```
 
 ## Download Dataset
 
-### Download SynCAN and ROAD Datasets
+#### Download SynCAN and ROAD Datasets
 
 ```
 cd src
@@ -48,7 +48,7 @@ chmod +x download_road_dataset.sh
 ./download_road_dataset.sh
 ```
 
-### Create Symbolic Link (Optional)
+#### Create Symbolic Link (Optional)
 If you have the the datasets downloaded (or want to download) outside of the repo, you can create a symbolic link to show the those dataset folders wihtin the repository. To create symbolic link from the repository's directory:
 
 ```
@@ -152,7 +152,7 @@ Here is the detailed tree structure of the datasets folder (after you download b
 ```
 ## Implementing cantropy
 
-### Feature Extraction
+#### Feature Extraction
 ```python
 python run_feature_extraction.py --config-name <dataset_name> -m data_type=training,testing
 ```
@@ -164,7 +164,7 @@ python run_feature_extraction.py --config-name <dataset_name> -m data_type=train
     python run_feature_extraction.py --config-name road -m data_type=training,testing
     ```
 
-### Feature Analysis and Evaluation
+#### Feature Analysis and Evaluation
 ```python
 python run_feature_analysis.py --config-name <dataset_name>
 ```
@@ -176,7 +176,7 @@ python run_feature_analysis.py --config-name <dataset_name>
   python run_feature_analysis.py --config-name road
   ```
 
-## Unit Test
+### Unit Test
 - To run the scripts on a smaller fraction of dataset add the argument ```fraction=<any fraction within 0.0 to 1.0>```
 - For instance, to run the scripts on the first 10% of the data points (both training and testing):
   
@@ -190,7 +190,7 @@ python run_feature_analysis.py --config-name <dataset_name>
   python run_feature_analysis.py fraction=0.10
   ```
   
-## Visualization and Results
+### Visualization and Results
 
 - The figures are saved in `artificts/figures` folder.
 - The results are saved in `artificts/results` folder.
