@@ -36,18 +36,6 @@ mamba activate cantropy
 
 ## Download Dataset
 
-### Create Symbolic Link (Optional)
-If you have the the datasets already downloaded elsewhere (outside of the repo), you can create a symbolic link to show the those dataset folders wihtin the repository. To create symbolic link from the repository's directory:
-
-```
-cd <directory_to_cantropy>
-ln -s <directory_to_dataset_can-ids>/ datasets/
-```
-
-For example, if `/home/workspace/datasets/can-ids/` folder contains the SynCAN and ROAD dataset, you can follow:
-```
-ln -s /home/workspace/datasets/can-ids/ datasets/
-```
 ### Download SynCAN and ROAD Datasets
 
 ```
@@ -60,7 +48,21 @@ chmod +x download_road_dataset.sh
 ./download_road_dataset.sh
 ```
 
+### Create Symbolic Link (Optional)
+If you have the the datasets downloaded (or want to download) outside of the repo, you can create a symbolic link to show the those dataset folders wihtin the repository. To create symbolic link from the repository's directory:
 
+```
+cd <directory_to_cantropy>
+ln -s <directory_to_syncan_dataset>/ datasets/
+ln -s <directory_to_road_dataset>/ datasets/
+```
+
+For example, if `/home/workspace/can-ids-datasets/` folder contains the SynCAN and ROAD dataset, you can follow:
+```
+cd cantropy
+ln -s /home/workspace/can-ids-datasets/syncan datasets
+ln -s /home/workspace/can-ids-datasets/road datasets
+```
 
 Here is the folder structure of the repository: 
 ```

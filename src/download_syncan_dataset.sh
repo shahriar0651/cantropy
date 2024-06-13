@@ -27,7 +27,7 @@
 # Email: hshahriar@vt.edu
 #
 
-DEFAULT_DIRECTORY="../../datasets/can-ids/syncan/"
+DEFAULT_DIRECTORY="../datasets/syncan/"
 echo "Enter the directory to download the dataset"
 echo "or just press Enter to accept following default directory:"
 read -p "[${DEFAULT_DIRECTORY}]:" USER_DIRECTORY
